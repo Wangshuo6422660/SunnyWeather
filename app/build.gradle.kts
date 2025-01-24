@@ -7,6 +7,10 @@ android {
     namespace = "com.sunnyweather.android"
     compileSdk = 35
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.sunnyweather.android"
         minSdk = 35
@@ -37,9 +41,16 @@ android {
 
 dependencies {
 
+    implementation(libs.recyclerview)
+    implementation(libs.lifecycle.extension)
+    implementation(libs.lifecycle.livedata)
+    implementation(libs.material)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
