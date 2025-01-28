@@ -8,11 +8,11 @@ import retrofit2.http.Query
 
 
 
-// 访问彩云天气 城市搜索API的Retrofit接口
+// 访问(彩云天气)城市搜索API的Retrofit接口
 
 interface PlaceService {
 
-    @GET("v2/place?query=<query>&token=${SunnyWeatherApplication.TOKEN}&lang=zh_CN")
+    @GET("v2/place?&token=${SunnyWeatherApplication.TOKEN}&lang=zh_CN")
     // Retrofit将服务器返回的JSON数据自动解析成PlaceResponse对象
     fun searchPlaces(@Query("query") query: String): Call<PlaceResponse>
 

@@ -14,6 +14,8 @@ class PlaceViewModel: ViewModel() {
 
     private val searchLiveData = MutableLiveData<String>()
 
+    // 用于对界面上显示的城市数据进行缓存——原则上，与界面相关的数据都应该放到ViewModel中
+    // 这样可以保证它们在手机屏幕发生旋转时不会丢失
     val placeList = ArrayList<Place>()
 
     // 每当searchPlaces()函数被调用时，switchMap()方法所对应的转换函数就会执行
@@ -26,4 +28,10 @@ class PlaceViewModel: ViewModel() {
     fun searchPlaces(query: String) {
         searchLiveData.value = query
     }
+
+    fun savePlace(place: Place) = Repository.savePlace(place)
+
+    fun getSavedPlace() = Repository.getSavedPlace()
+
+    fun isPlaceSaved() = Repository.isPlaceSaved()
 }

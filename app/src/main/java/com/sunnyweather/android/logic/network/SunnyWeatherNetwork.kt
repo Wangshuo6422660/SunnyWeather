@@ -13,9 +13,21 @@ import kotlin.coroutines.suspendCoroutine
 
 object SunnyWeatherNetwork {
 
+    // 对PlaceService接口进行封装
+
     private val placeService = ServiceCreator.create<PlaceService>()
 
     suspend fun searchPlaces(query: String) = placeService.searchPlaces(query).await()
+
+
+    // 对WeatherService接口进行封装
+
+    private val weatherService = ServiceCreator.create<WeatherService>()
+
+    suspend fun getRealtimeWeather(lng: String, lat: String) = weatherService.getRealtimeWeather(lng, lat).await()
+
+    suspend fun getDailyWeather(lng: String, lat: String) = weatherService.getDailyWeather(lng, lat).await()
+
 
     // 不同的Service接口返回的数据类型不同——使用泛型
     // Call<T>的扩展函数、挂起函数
@@ -26,7 +38,7 @@ object SunnyWeatherNetwork {
         return suspendCoroutine { continuation ->
             // 调用enqueue()方法时，Retrofit就会根据注解中配置的服务器接口地址去进行网络请求，服务器响应的数据会回
             // 调到enqueue()方法中传入的Callback实现里面。需要注意的是，当发起请求时，Retrofit会自动在内部开启子
-            // 线程，当数据会回调到Callback中之后，Retrofit又会自动切换回主线程，整个操作过程中无需考虑线程切换问题
+            // 线程，当数据回调到Callback中之后，Retrofit又会自动切换回主线程，整个操作过程中无需考虑线程切换问题
             enqueue(object : Callback<T> {
                 override fun onResponse(call: Call<T?>, response: Response<T?>) {
                     val body = response.body()
@@ -41,4 +53,5 @@ object SunnyWeatherNetwork {
             })
         }
     }
+
 }
