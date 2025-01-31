@@ -41,6 +41,7 @@ android {
 
 dependencies {
 
+    implementation(libs.swiperefreshlayout)
     implementation(libs.recyclerview)
     implementation(libs.lifecycle.extension)
     implementation(libs.lifecycle.livedata)

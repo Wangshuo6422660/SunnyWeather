@@ -32,15 +32,29 @@ class PlaceAdapter(private val fragment: PlaceFragment, private val placeList: L
         holder.itemView.setOnClickListener {
             val position = holder.adapterPosition
             val place = placeList[position]
-            val intent = Intent(parent.context, WeatherActivity::class.java).apply {
-                putExtra("location_lng", place.location.lng)
-                putExtra("location_lat", place.location.lat)
-                putExtra("place_name", place.name)
+            // 处理切换城市之后的逻辑
+            // 此工作必须在PlaceAdapter中进行，因为之前选中了某个城市后是跳转到WeatherActivity的，
+            // 而现在由于我们本来就是在WeatherActivity中的，因此不需要跳转，只需去请求新选择城市的天气信息就行
+            val activity = fragment.activity
+            if (activity is WeatherActivity) {
+                // 如果在WeatherActivity中，那么就关闭滑动菜单，给WeatherViewModel赋值新的经纬度坐标、地区名称，然后刷新城市的天气信息
+                activity.drawerLayout.closeDrawers()
+                activity.viewModel.locationLng = place.location.lng
+                activity.viewModel.locationLat = place.location.lat
+                activity.viewModel.placeName = place.name
+                activity.refreshWeather()
+            } else {
+                // 如果是在MainActivity中，保持之前的处理逻辑即可
+                val intent = Intent(parent.context, WeatherActivity::class.java).apply {
+                    putExtra("location_lng", place.location.lng)
+                    putExtra("location_lat", place.location.lat)
+                    putExtra("place_name", place.name)
+                }
+                fragment.startActivity(intent)
+                activity?.finish()
             }
             // 在跳转到WeatherActivity之前，先调用PlaceViewModel的savePlace()方法来存储选中的城市
             fragment.viewModel.savePlace(place)
-            fragment.startActivity(intent)
-            fragment.activity?.finish()
         }
         return holder
     }

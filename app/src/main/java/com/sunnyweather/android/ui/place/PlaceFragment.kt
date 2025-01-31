@@ -34,7 +34,10 @@ class PlaceFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         // 对存储的状态进行判断、读取
-        if (viewModel.isPlaceSaved()) {
+        // 现在已将PlaceFragment嵌入WeatherActivity中之后，如果还直接跳转到WeatherActivity肯定是不行的，因为这会造成无限循环跳转的情况
+            // 需要先对PlaceFragment所在的活动进行判断——只有当PlaceFragment被嵌入MainActivity中，并且之前已经存在选中的城市
+            // 才会直接跳转到WeatherActivity，这样就会解决无限循环跳转的问题了
+        if (activity is MainActivity && viewModel.isPlaceSaved()) {
             val place = viewModel.getSavedPlace()
             val intent = Intent(context, WeatherActivity::class.java).apply {
                 putExtra("location_lng", place.location.lng)
